@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+
+  <body>
+    Broadcast Channel API 可以实现同 源 下浏览器不同窗口，Tab 页，frame 或者
+    iframe 下的 浏览器上下文 (通常是同一个网站下不同的页面) 之间的简单通讯。
+    <hr />
+    <button onclick="send()">send</button>
+    <button onclick="close1()">close</button>
+    <script>
+      var bc = new BroadcastChannel("test_channel");
+      console.log(bc);
+      bc.onmessage = function (ev) {
+        console.log(ev);
+      };
+      function send() {
+        console.log(11);
+        bc.postMessage("This is a test message.");
+      }
+      function close1() {
+        console.log("close");
+
+        bc.close();
+        // console.log(bc);
+      }
+    </script>
+  </body>
+</html>
