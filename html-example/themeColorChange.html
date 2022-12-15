@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body[mode="light"] {
+        --main-font-color: #000;
+        --main-bg-color: #999;
+      }
+      body[mode="dark"] {
+        --main-font-color: #fff;
+        --main-bg-color: #000;
+      }
+      .title {
+        height: 200px;
+        width: 200px;
+        color: var(--main-font-color);
+        background-color: var(--main-bg-color);
+      }
+    </style>
+  </head>
+  <body mode="light">
+    <div class="title">hello world</div>
+    <button id="btn">change</button>
+
+    <script>
+      let btn = document.querySelector("#btn");
+      btn.addEventListener("click", function (e) {
+        let body = document.body;
+        console.log(body);
+        let attr = body.getAttribute("mode");
+        console.log(attr);
+        if (attr == "light") {
+          body.setAttribute("mode", "dark");
+        } else {
+          body.setAttribute("mode", "light");
+        }
+      });
+    </script>
+  </body>
+</html>
