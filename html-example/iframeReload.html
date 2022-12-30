@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- <meta http-equiv="X-UA-Compatible" content="IE=edge" /> -->
+    <meta http-equiv="X-Frame-Options" content="deny" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="first" key="bb">
+      <p id="p2">222</p>
+      <iframe
+        src="https://dev1.baoxiaohe.fun"
+        frameborder="0"
+        id="ifr"
+        onload="load()"
+      ></iframe>
+    </div>
+
+    <button onclick="handle()">img add</button>
+    <button onclick="load()">load</button>
+
+    <script>
+      function load() {
+        console.log("loading");
+      }
+
+      function handle() {
+        let el = document.getElementById("first");
+        let p2 = document.getElementById("p2");
+        let iframe = document.getElementById("ifr");
+        console.log(el.firstChild);
+        console.log(el.childNodes);
+        // 最根本原因就是这个行代码 vue在diff的过程中，如果需要调整绘制，会执行insertBefore命令
+        // 而对于iframe来说，这次位置的变化，会导致iframe重新加载 （而img却不会）
+        el.insertBefore(iframe, el.firstChild);
+      }
+    </script>
+  </body>
+</html>
