@@ -1,19 +1,20 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <title>视频录制</title>
     <meta charset="UTF-8" />
+    <style>
+
+    </style>
 </head>
 
 <body>
     <video class="video" width="600px" controls></video>
     <button class="record-btn">点击进行录制</button>
-
+    <canvas id="canvas"></canvas>
     <script>
         let btn = document.querySelector('.record-btn')
-
         btn.addEventListener('click', async function () {
             let stream = await navigator.mediaDevices.getDisplayMedia({
                 audio: true,
@@ -26,7 +27,7 @@
             const mime = MediaRecorder.isTypeSupported("video/webm; codecs=vp9")
                 ? "video/webm; codecs=vp9"
                 : "video/webm"
-            let mediaRecorder = new MediaRecorder(stream, {
+            let mediaRecorder = new MediaRecorder(canvasEl, {
                 mimeType: mime,
                 audio: true,
             })

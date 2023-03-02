@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button onClick="handle()">btn</button>
+    <script>
+      class ABC {
+        changeQueue = [];
+        constructor() {}
+        //观测到变化后的处理
+        change() {
+          this.changeQueue.forEach((fn) => {
+            fn();
+          });
+        }
+        $on(envnt, fn) {
+          if (!this[envnt]) {
+            this[envnt] = [];
+          }
+          this[envnt].push(fn);
+        }
+      }
+
+      const a = new ABC();
+      a.$on("changeQueue", () => {
+        console.log("123");
+      });
+      function handle() {
+        a.change();
+      }
+    </script>
+  </body>
+</html>

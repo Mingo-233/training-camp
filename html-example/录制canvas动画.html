@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script src="https://r4.baoxiaohe.fun/static/video-convert/localforage.js"></script>
+
+    <canvas id="canvas"></canvas>
+    <button class="record-btn">点击进行录制</button>
+    <video class="video" width="600px" controls></video>
+
+    <script>
+        console.log(window.localForage);
+        let canvas = document.querySelector('#canvas')
+        let ctx = canvas.getContext('2d')
+        // 参数分别为画布上下文对象、横纵坐标、填充颜色
+        function drawCircle(ctx, x = 100, y = 100, color) {
+            const radius = 20
+            ctx.clearRect(0, 0, 600, 300)
+            ctx.beginPath()
+            ctx.arc(x, y, radius, 0, 2 * Math.PI, false)
+            ctx.lineWidth = 0
+            ctx.closePath()
+            ctx.fillStyle = color
+            ctx.fill()
+            ctx.strokeStyle = color
+            ctx.stroke()
+        }
+        // 初始化画布
+
+        function initCanvas() {
+            const $circle = document.querySelector('#canvas')
+            $circle.width = 600
+            $circle.height = 300
+            const ctx = $circle.getContext('2d')
+            drawCircle(ctx, 100, 100, 'red')
+            setInterval(() => {
+                // let color = colors[parseInt(Math.random() * 6)] // 随机颜色
+                let color = 'green' // 随机颜色
+                let p = Math.random()
+                const x = Math.cos(p * 2 * Math.PI) * 50 + 300
+                const y = Math.sin(p * 2 * Math.PI) * 50 + 150
+                if (x < 300 && y > 150 || x > 300 && y < 150) color = 'yellow'
+                drawCircle(ctx, x, y, color) // 5s内不断画圆
+            }, 500);
+
+        }
+        initCanvas()
+        const chunks = new Set()
+
+        let btn = document.querySelector('.record-btn')
+        btn.addEventListener('click', async function () {
+            const $canvas = document.querySelector('#canvas')
+
+            const mediaStream = $canvas.captureStream(10) // 设置帧频率(FPS)
+            mediaRecord = new MediaRecorder(mediaStream, {
+                videoBitsPerSecond: 8500000,
+                // mimeType: 'video/mp4;codecs=h264'
+                mimeType: 'video/webm;codecs=vp9'
+
+            })
+
+            //需要更好的浏览器支持
+            // const mime = MediaRecorder.isTypeSupported("video/webm; codecs=vp9")
+            //     ? "video/webm; codecs=vp9"
+            //     : "video/webm"
+            // let mediaRecorder = new MediaRecorder(mediaStream, {
+            //     mimeType: mime,
+            //     audio: true,
+            // })
+
+            let chunks = []
+            mediaRecord.addEventListener('dataavailable', function (e) {
+                chunks.push(e.data)
+                console.log(e.data);
+                localForage.setItem("bxh-video-convert1", e.data);
+            })
+
+            mediaRecord.addEventListener('stop', function (e) {
+                console.log(chunks);
+
+                const videoBlob = new Blob(chunks, { 'type': 'video/webm' })
+                console.log(videoBlob);
+                let url = window.URL.createObjectURL(videoBlob)
+                let video = document.querySelector('video')
+                video.src = url
+                let a = document.createElement('a')
+                a.href = url
+                a.download = "video.webm"
+                a.click()
+            })
+            mediaRecord.start()
+            setTimeout(() => {
+                mediaRecord.stop()
+                console.log('jieshu');
+            }, 2000);
+        })
+    </script>
+</body>
+
+</html>
